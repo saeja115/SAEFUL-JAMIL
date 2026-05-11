@@ -204,9 +204,112 @@ section { padding: 6rem 3rem; }
   background: linear-gradient(90deg, var(--accent), var(--green));
   transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
 }
-.skill-card:hover { border-color: var(--accent); transform: translateY(-6px); box-shadow: var(--glow); }
+.skill-card::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(0,229,255,0.07), transparent 70%);
+  opacity: 0; transition: opacity 0.4s;
+}
+.skill-card:hover { border-color: var(--accent); transform: translateY(-8px) scale(1.02); box-shadow: var(--glow), 0 20px 40px rgba(0,0,0,0.4); }
 .skill-card:hover::before { transform: scaleX(1); }
-.skill-icon { font-size: 1.6rem; margin-bottom: 0.8rem; display: block; }
+.skill-card:hover::after { opacity: 1; }
+.skill-card:hover .skill-icon { animation-play-state: running; }
+
+/* ── ICON ANIMATIONS ── */
+.skill-icon {
+  font-size: 2rem; margin-bottom: 0.8rem; display: inline-block;
+  animation-play-state: paused;
+  transform-origin: center;
+  will-change: transform;
+}
+
+/* HTML5 - spin globe */
+.skill-card:nth-child(1) .skill-icon {
+  animation: iconSpin 2s linear infinite;
+  animation-play-state: paused;
+}
+/* CSS3 - color pulse */
+.skill-card:nth-child(2) .skill-icon {
+  animation: iconPalette 1.2s ease-in-out infinite alternate;
+  animation-play-state: paused;
+}
+/* JS - bounce */
+.skill-card:nth-child(3) .skill-icon {
+  animation: iconBounce 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite;
+  animation-play-state: paused;
+}
+/* PHP - wrench spin */
+.skill-card:nth-child(4) .skill-icon {
+  animation: iconWobble 0.8s ease-in-out infinite;
+  animation-play-state: paused;
+}
+/* Git - orbit */
+.skill-card:nth-child(5) .skill-icon {
+  animation: iconOrbit 1.5s ease-in-out infinite;
+  animation-play-state: paused;
+}
+/* Network - pulse wave */
+.skill-card:nth-child(6) .skill-icon {
+  animation: iconWave 1s ease-in-out infinite;
+  animation-play-state: paused;
+}
+
+/* always show subtle idle float */
+.skill-card .skill-icon {
+  animation: iconFloat 3s ease-in-out infinite;
+}
+.skill-card:nth-child(1) .skill-icon { animation: iconFloat 3s ease-in-out infinite; }
+.skill-card:nth-child(2) .skill-icon { animation: iconFloat 3.2s ease-in-out infinite 0.3s; }
+.skill-card:nth-child(3) .skill-icon { animation: iconFloat 2.8s ease-in-out infinite 0.6s; }
+.skill-card:nth-child(4) .skill-icon { animation: iconFloat 3.4s ease-in-out infinite 0.1s; }
+.skill-card:nth-child(5) .skill-icon { animation: iconFloat 3.1s ease-in-out infinite 0.4s; }
+.skill-card:nth-child(6) .skill-icon { animation: iconFloat 2.9s ease-in-out infinite 0.2s; }
+
+.skill-card:hover:nth-child(1) .skill-icon { animation: iconSpin 1.5s linear infinite; }
+.skill-card:hover:nth-child(2) .skill-icon { animation: iconPalette 0.8s ease-in-out infinite alternate; }
+.skill-card:hover:nth-child(3) .skill-icon { animation: iconBounce 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite; }
+.skill-card:hover:nth-child(4) .skill-icon { animation: iconWobble 0.6s ease-in-out infinite; }
+.skill-card:hover:nth-child(5) .skill-icon { animation: iconOrbit 1s ease-in-out infinite; }
+.skill-card:hover:nth-child(6) .skill-icon { animation: iconWave 0.7s ease-in-out infinite; }
+
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes iconSpin {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
+}
+@keyframes iconPalette {
+  0% { transform: scale(1) rotate(-5deg); filter: hue-rotate(0deg); }
+  100% { transform: scale(1.2) rotate(5deg); filter: hue-rotate(60deg); }
+}
+@keyframes iconBounce {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  30% { transform: translateY(-14px) scaleY(1.05); }
+  60% { transform: translateY(0) scaleY(0.9); }
+  75% { transform: translateY(-6px); }
+}
+@keyframes iconWobble {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(-18deg); }
+  40% { transform: rotate(14deg); }
+  60% { transform: rotate(-10deg); }
+  80% { transform: rotate(8deg); }
+}
+@keyframes iconOrbit {
+  0% { transform: translateX(0) scale(1); }
+  25% { transform: translateX(5px) translateY(-5px) scale(1.1); }
+  50% { transform: translateX(0) scale(1.15) rotate(180deg); }
+  75% { transform: translateX(-5px) translateY(5px) scale(1.1); }
+  100% { transform: translateX(0) scale(1) rotate(360deg); }
+}
+@keyframes iconWave {
+  0%, 100% { transform: scaleX(1) scaleY(1); }
+  25% { transform: scaleX(1.15) scaleY(0.9); }
+  50% { transform: scaleX(0.9) scaleY(1.15); }
+  75% { transform: scaleX(1.1) scaleY(0.95); }
+}
+
 .skill-name { font-weight: 700; color: var(--white); font-size: 0.95rem; margin-bottom: 0.3rem; }
 .skill-desc { font-family: 'Space Mono', monospace; font-size: 0.67rem; color: var(--text-dim); line-height: 1.5; }
 .skill-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 1rem; overflow: hidden; }
@@ -308,6 +411,163 @@ footer span { color: var(--accent); }
   transition: opacity 0.75s ease, transform 0.75s ease;
 }
 .reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── GLITCH EFFECT on hero name ── */
+.hero-name {
+  position: relative;
+}
+.hero-name:hover .line2 {
+  animation: glitchText 0.4s steps(2) infinite;
+}
+@keyframes glitchText {
+  0%   { text-shadow: 2px 0 #ff0040, -2px 0 #00e5ff; clip-path: inset(20% 0 60% 0); }
+  20%  { text-shadow: -2px 0 #ff0040, 2px 0 #39ff14; clip-path: inset(60% 0 10% 0); }
+  40%  { text-shadow: 2px 2px #00e5ff, -2px -2px #ff0040; clip-path: inset(40% 0 30% 0); }
+  60%  { text-shadow: -3px 0 #39ff14, 3px 0 #ff0040; clip-path: inset(5% 0 80% 0); }
+  80%  { text-shadow: 2px 0 #00e5ff, -2px 0 #ff0040; clip-path: inset(70% 0 5% 0); }
+  100% { text-shadow: none; clip-path: none; }
+}
+
+/* ── ANIMATED SECTION LABELS ── */
+.section-label {
+  position: relative; display: inline-block;
+  overflow: hidden;
+}
+.section-label::after {
+  content: '';
+  position: absolute; top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0,229,255,0.3), transparent);
+  animation: labelShimmer 3s ease-in-out infinite;
+}
+@keyframes labelShimmer {
+  0% { left: -100%; }
+  50%, 100% { left: 200%; }
+}
+
+/* ── PROJECT CARD enhanced ── */
+.project-card {
+  background: rgba(12,19,32,0.8); border: 1px solid var(--border);
+  border-radius: 12px; padding: 2rem; transition: all 0.35s;
+  position: relative; overflow: hidden; backdrop-filter: blur(6px);
+}
+.project-card::before {
+  content: '';
+  position: absolute; top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: conic-gradient(transparent 0deg, rgba(0,229,255,0.03) 60deg, transparent 120deg);
+  animation: cardRotate 8s linear infinite;
+  opacity: 0; transition: opacity 0.4s;
+}
+.project-card::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at top right, rgba(0,229,255,0.06), transparent 60%);
+  opacity: 0; transition: opacity 0.4s;
+}
+.project-card:hover { border-color: var(--accent); transform: translateY(-8px); box-shadow: var(--glow); }
+.project-card:hover::before { opacity: 1; }
+.project-card:hover::after { opacity: 1; }
+@keyframes cardRotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── CONTACT LINK icon bounce ── */
+.contact-link .icon {
+  display: inline-block;
+  transition: transform 0.2s;
+}
+.contact-link:hover .icon {
+  animation: iconJump 0.4s ease;
+}
+@keyframes iconJump {
+  0%   { transform: translateY(0) rotate(0deg); }
+  30%  { transform: translateY(-8px) rotate(-10deg); }
+  60%  { transform: translateY(2px) rotate(5deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* ── NAV logo glitch ── */
+.nav-logo {
+  cursor: pointer;
+  transition: text-shadow 0.2s;
+}
+.nav-logo:hover {
+  animation: navGlitch 0.3s steps(3) forwards;
+  text-shadow: 2px 0 rgba(0,229,255,0.7), -2px 0 rgba(57,255,20,0.7);
+}
+@keyframes navGlitch {
+  0%   { letter-spacing: 2px; }
+  33%  { letter-spacing: 5px; text-shadow: 3px 0 #00e5ff, -3px 0 #ff0040; }
+  66%  { letter-spacing: 1px; text-shadow: -2px 0 #39ff14, 2px 0 #00e5ff; }
+  100% { letter-spacing: 2px; text-shadow: none; }
+}
+
+/* ── BTN pulse ring on hover ── */
+.btn-primary {
+  position: relative; overflow: visible;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute; inset: -4px;
+  border-radius: 6px;
+  border: 2px solid var(--accent);
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 0.3s;
+}
+.btn-primary:hover::after {
+  opacity: 0.5;
+  transform: scale(1.05);
+  animation: btnPulseRing 1s ease-out infinite;
+}
+@keyframes btnPulseRing {
+  0%   { opacity: 0.5; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+
+/* ── STRENGTH items slide-in ── */
+.strength-item {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: rgba(12,19,32,0.8); border: 1px solid var(--border);
+  border-radius: 6px; transition: all 0.3s; backdrop-filter: blur(6px);
+  position: relative; overflow: hidden;
+}
+.strength-item::after {
+  content: '';
+  position: absolute; top: 0; left: -100%; width: 40px; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(57,255,20,0.15), transparent);
+  transition: none;
+}
+.strength-item:hover::after {
+  left: 120%;
+  transition: left 0.5s ease;
+}
+.strength-item:hover { border-color: var(--green); transform: translateX(6px); }
+
+/* ── TYPED cursor blink ── */
+@keyframes blink {
+  0%,100% { opacity: 1; } 50% { opacity: 0; }
+}
+
+/* ── BADGE animated dot ring ── */
+.badge-dot::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid var(--green);
+  width: 15px; height: 15px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation: badgeRing 1.5s ease-out infinite;
+  opacity: 0;
+}
+.photo-badge { position: relative; }
+@keyframes badgeRing {
+  0%   { width: 7px; height: 7px; opacity: 0.8; transform: translate(-50%, -50%); }
+  100% { width: 24px; height: 24px; opacity: 0; transform: translate(-50%, -50%); }
+}
 
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width: 4px; }

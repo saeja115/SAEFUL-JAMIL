@@ -201,7 +201,135 @@ window.addEventListener('scroll', () => {
   navLinks.forEach(a => { a.style.color = a.getAttribute('href') === `#${current}` ? 'var(--accent)' : ''; });
 });
 
+
 // Stagger cards
 document.querySelectorAll('.skill-card, .project-card').forEach((el, idx) => {
   el.style.transitionDelay = `${idx * 0.07}s`;
+});
+
+// ═══════════════════════════════════════════════
+//  TILT EFFECT on skill cards
+// ═══════════════════════════════════════════════
+document.querySelectorAll('.skill-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect  = card.getBoundingClientRect();
+    const cx    = rect.left + rect.width  / 2;
+    const cy    = rect.top  + rect.height / 2;
+    const dx    = (e.clientX - cx) / (rect.width  / 2);
+    const dy    = (e.clientY - cy) / (rect.height / 2);
+    const tiltX = dy * -10;
+    const tiltY = dx *  10;
+    card.style.transform = `translateY(-8px) scale(1.02) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+    card.style.boxShadow = `${-dx*8}px ${-dy*8}px 30px rgba(0,229,255,0.2), 0 0 25px rgba(0,229,255,0.5)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+    card.style.boxShadow = '';
+  });
+});
+
+// ═══════════════════════════════════════════════
+//  PARTICLE BURST on project card click
+// ═══════════════════════════════════════════════
+function spawnParticles(x, y) {
+  const colors = ['#00e5ff', '#39ff14', '#ffffff', '#7fdbff'];
+  for (let i = 0; i < 14; i++) {
+    const p = document.createElement('div');
+    p.style.cssText = `
+      position:fixed; pointer-events:none; z-index:9999;
+      width:${Math.random()*6+3}px; height:${Math.random()*6+3}px;
+      border-radius:50%; background:${colors[i%colors.length]};
+      left:${x}px; top:${y}px;
+      transition: transform ${0.4+Math.random()*0.4}s ease-out, opacity 0.5s ease-out;
+      transform: translate(0,0) scale(1); opacity:1;
+      box-shadow: 0 0 6px currentColor;
+    `;
+    document.body.appendChild(p);
+    const angle  = (i / 14) * Math.PI * 2 + Math.random() * 0.5;
+    const dist   = 40 + Math.random() * 80;
+    const tx     = Math.cos(angle) * dist;
+    const ty     = Math.sin(angle) * dist;
+    requestAnimationFrame(() => {
+      p.style.transform = `translate(${tx}px, ${ty}px) scale(0)`;
+      p.style.opacity   = '0';
+    });
+    setTimeout(() => p.remove(), 900);
+  }
+}
+document.querySelectorAll('.project-card').forEach(card => {
+  card.addEventListener('click', e => spawnParticles(e.clientX, e.clientY));
+});
+
+// ═══════════════════════════════════════════════
+//  RIPPLE on buttons
+// ═══════════════════════════════════════════════
+document.querySelectorAll('.btn').forEach(btn => {
+  btn.addEventListener('click', e => {
+    const r    = btn.getBoundingClientRect();
+    const rip  = document.createElement('span');
+    const size = Math.max(r.width, r.height) * 2;
+    rip.style.cssText = `
+      position:absolute; pointer-events:none;
+      width:${size}px; height:${size}px; border-radius:50%;
+      background:rgba(255,255,255,0.25);
+      left:${e.clientX - r.left - size/2}px;
+      top:${e.clientY - r.top  - size/2}px;
+      transform:scale(0); animation:rippleAnim 0.6s ease-out forwards;
+    `;
+    if (!document.getElementById('ripple-style')) {
+      const s = document.createElement('style');
+      s.id = 'ripple-style';
+      s.textContent = `@keyframes rippleAnim { to { transform:scale(1); opacity:0; } }`;
+      document.head.appendChild(s);
+    }
+    btn.style.position = 'relative';
+    btn.style.overflow = 'hidden';
+    btn.appendChild(rip);
+    setTimeout(() => rip.remove(), 650);
+  });
+});
+
+// ═══════════════════════════════════════════════
+//  SCAN LINE sweep on sections
+// ═══════════════════════════════════════════════
+const scanStyle = document.createElement('style');
+scanStyle.textContent = `
+  .scan-sweep {
+    position: relative;
+    overflow: hidden;
+  }
+  .scan-sweep::before {
+    content: '';
+    position: absolute;
+    top: -100%; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.5;
+    animation: scanLine 4s linear infinite;
+    pointer-events: none;
+    z-index: 2;
+  }
+  @keyframes scanLine {
+    0%   { top: -2px; opacity: 0.6; }
+    100% { top: 100%; opacity: 0; }
+  }
+`;
+document.head.appendChild(scanStyle);
+document.querySelectorAll('section').forEach(s => s.classList.add('scan-sweep'));
+
+// ═══════════════════════════════════════════════
+//  MAGNETIC hover on nav links
+// ═══════════════════════════════════════════════
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('mousemove', e => {
+    const rect = link.getBoundingClientRect();
+    const dx   = (e.clientX - rect.left - rect.width/2)  * 0.25;
+    const dy   = (e.clientY - rect.top  - rect.height/2) * 0.25;
+    link.style.transform = `translate(${dx}px, ${dy}px)`;
+  });
+  link.addEventListener('mouseleave', () => {
+    link.style.transform = '';
+    link.style.transition = 'transform 0.4s ease, color 0.3s';
+    setTimeout(() => { link.style.transition = ''; }, 400);
+  });
 });
