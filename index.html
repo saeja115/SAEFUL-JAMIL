@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="id" id="html-root">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Saeful Jamil — Web Developer | Orbital Menu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
+
+        :root {
+            --bg: #050810;
+            --bg2: #080d14;
+            --card: #0c1320;
+            --border: #162135;
+            --accent: #00e5ff;
+            --accent2: #7fdbff;
+            --green: #39ff14;
+            --text: #c9d1d9;
+            --text-dim: #5a7080;
+            --white: #f0f6fc;
+            --glow: 0 0 25px rgba(0, 229, 255, 0.5);
+            --glow2: 0 0 40px rgba(57, 255, 20, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Syne', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        #bg3d {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .cursor {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            box-shadow: var(--glow);
+            transition: transform 0.08s ease;
+        }
+
+        .cursor-ring {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 1.5px solid var(--accent);
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.2s ease, opacity 0.2s;
+            opacity: 0.45;
+        }
+
+        /* NAVBAR - hanya logo, tanpa menu kanan */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(5, 8, 16, 0.75);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(0, 229, 255, 0.1);
+        }
+
+        .nav-logo {
+            font-family: 'Space Mono', monospace;
+            color: var(--accent);
+            font-size: 1rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+
+        .nav-logo span {
+            color: var(--green);
+        }
+
+        /* Hero Section */
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 7rem 3rem 3rem;
+            gap: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-left {
+            flex: 1;
+            max-width: 600px;
+            text-align: left;
+        }
+
+        .hero-tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--green);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 1.2rem;
+            opacity: 0;
+            animation: fadeUp 0.8s 0.3s forwards;
+        }
+
+        .hero-tag::before {
+            content: '> ';
+            color: var(--accent);
+        }
+
+        .hero-name {
+            font-size: clamp(2.8rem, 6vw, 5.5rem);
+            font-weight: 800;
+            line-height: 1.05;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            animation: fadeUp 0.8s 0.5s forwards;
+        }
+
+        .hero-name .line2 {
+            background: linear-gradient(90deg, var(--accent), var(--green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-sub {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.83rem;
+            color: var(--text-dim);
+            margin: 1.5rem 0 2.5rem;
+            max-width: 480px;
+            line-height: 1.9;
+            opacity: 0;
+            animation: fadeUp 0.8s 0.7s forwards;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeUp 0.8s 0.9s forwards;
+        }
+
+        .btn {
+            padding: 0.75rem 1.8rem;
+            border-radius: 4px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.78rem;
+            letter-spacing: 1px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg);
+            font-weight: 700;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--glow);
+            transform: translateY(-3px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .btn-outline:hover {
+            background: rgba(0, 229, 255, 0.08);
+            transform: translateY(-3px);
+        }
+
+        /* ========= ORBITAL MENU AROUND PHOTO ========= */
+        .orbital-container {
+            position: relative;
+            width: 320px;
+            height: 380px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .orbit-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .photo-core {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            width: 240px;
+            height: 300px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 50px rgba(0, 229, 255, 0.3), 0 0 100px rgba(0, 229, 255, 0.1);
+            background: #0a101c;
+        }
+
+        .photo-core img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            filter: contrast(1.05) brightness(0.92);
+        }
+
+        .photo-core::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 55%, rgba(0, 229, 255, 0.06));
+            pointer-events: none;
+        }
+
+        .photo-deco-orb {
+            position: absolute;
+            width: 260px;
+            height: 320px;
+            border: 2px solid var(--green);
+            border-radius: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.3;
+            animation: floatDeco 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .photo-badge-orb {
+            position: absolute;
+            bottom: -18px;
+            right: -18px;
+            background: var(--card);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--accent);
+            letter-spacing: 1px;
+            box-shadow: var(--glow);
+            white-space: nowrap;
+            z-index: 15;
+        }
+
+        .badge-dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--green);
+            margin-right: 6px;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Orbital Menu Items */
+        .orbit-menu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .orbit-item {
+            position: absolute;
+            pointer-events: auto;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.7rem;
+            background: rgba(8, 13, 20, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            text-decoration: none;
+            white-space: nowrap;
+            box-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
+            z-index: 20;
+            left: 50%;
+            top: 50%;
+        }
+
+        .orbit-item:hover {
+            transform: scale(1.3) translateY(-4px) !important;
+            background: var(--accent);
+            color: var(--bg);
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.9);
+            border-color: var(--white);
+        }
+
+        @keyframes floatDeco {
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) translate(0, 0);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) translate(4px, 6px);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(57, 255, 20, 0.5);
+            }
+
+            50% {
+                opacity: 0.7;
+                box-shadow: 0 0 0 6px rgba(57, 255, 20, 0);
+            }
+        }
+
+        /* Sections */
+        section {
+            padding: 6rem 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 0.6rem;
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+        }
+
+        .section-label::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.3), transparent);
+            animation: labelShimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes labelShimmer {
+            0% {
+                left: -100%;
+            }
+
+            50%,
+            100% {
+                left: 200%;
+            }
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 3vw, 2.8rem);
+            font-weight: 800;
+            color: var(--white);
+            margin-bottom: 3rem;
+        }
+
+        .section-title span {
+            color: var(--accent);
+        }
+
+        #skills {
+            background: rgba(8, 13, 20, 0.92);
+            backdrop-filter: blur(4px);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .skill-card {
+            background: rgba(12, 19, 32, 0.85);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.4rem;
+            transition: all 0.35s;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(6px);
+        }
+
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--green));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s;
+        }
+
+        .skill-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--glow);
+        }
+
+        .skill-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .skill-icon {
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+            display: inline-block;
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+
+        .skill-name {
+            font-weight: 700;
+            color: var(--white);
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .skill-desc {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.67rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        .skill-bar {
+            height: 3px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .skill-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--green));
+            border-radius: 2px;
+            width: 0;
+            transition: width 1.3s ease;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background: rgba(12, 19, 32, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.35s;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(6px);
+            cursor: pointer;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent 0deg, rgba(0, 229, 255, 0.03) 60deg, transparent 120deg);
+            animation: cardRotate 8s linear infinite;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-8px);
+            box-shadow: var(--glow);
+        }
+
+        @keyframes cardRotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .project-num {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--accent);
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .project-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .project-desc {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.7;
+            margin-bottom: 1.2rem;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.62rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 3px;
+            background: rgba(0, 229, 255, 0.07);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            color: var(--accent);
+            letter-spacing: 0.5px;
+        }
+
+        .demo-link {
+            display: inline-block;
+            margin-top: 1rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--green);
+            text-decoration: none;
+            border: 1px solid var(--green);
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .demo-link:hover {
+            background: var(--green);
+            color: var(--bg);
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
+        }
+
+        #education {
+            background: rgba(8, 13, 20, 0.92);
+            backdrop-filter: blur(4px);
+        }
+
+        .edu-card {
+            background: rgba(12, 19, 32, 0.85);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: 8px;
+            padding: 2rem;
+            max-width: 600px;
+            backdrop-filter: blur(6px);
+        }
+
+        .edu-year {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--green);
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .edu-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.4rem;
+        }
+
+        .edu-sub {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .contact-wrap {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .contact-info p {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            line-height: 2;
+        }
+
+        .contact-links {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-link:hover {
+            color: var(--accent);
+        }
+
+        .contact-link .icon {
+            color: var(--accent);
+            font-size: 1rem;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+
+        .contact-link:hover .icon {
+            animation: iconJump 0.4s ease;
+        }
+
+        @keyframes iconJump {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            30% {
+                transform: translateY(-8px) rotate(-10deg);
+            }
+
+            60% {
+                transform: translateY(2px) rotate(5deg);
+            }
+
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+        }
+
+        .strengths-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .strength-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            background: rgba(12, 19, 32, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            transition: all 0.3s;
+            backdrop-filter: blur(6px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .strength-item::before {
+            content: '✓';
+            color: var(--green);
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+        }
+
+        .strength-item:hover {
+            border-color: var(--green);
+            transform: translateX(6px);
+        }
+
+        .strength-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 40px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(57, 255, 20, 0.15), transparent);
+        }
+
+        .strength-item:hover::after {
+            left: 120%;
+            transition: left 0.5s ease;
+        }
+
+        footer {
+            background: rgba(8, 13, 20, 0.95);
+            border-top: 1px solid rgba(0, 229, 255, 0.1);
+            padding: 2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            backdrop-filter: blur(8px);
+        }
+
+        footer span {
+            color: var(--accent);
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(28px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity 0.75s ease, transform 0.75s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            position: relative;
+            overflow: visible;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 6px;
+            border: 2px solid var(--accent);
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover::after {
+            opacity: 0.5;
+            transform: scale(1.05);
+            animation: btnPulseRing 1s ease-out infinite;
+        }
+
+        @keyframes btnPulseRing {
+            0% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1.4);
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 1400px;
+            background: transparent;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10001;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            transform: scale(1.1);
+            box-shadow: var(--glow);
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            #hero {
+                flex-direction: column-reverse;
+                padding: 7rem 1.5rem 3rem;
+                gap: 2.5rem;
+                align-items: center;
+                text-align: center;
+            }
+
+            .hero-left {
+                text-align: center;
+            }
+
+            .hero-sub {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-btns {
+                justify-content: center;
+            }
+
+            .orbital-container {
+                width: 280px;
+                height: 340px;
+            }
+
+            .photo-core {
+                width: 200px;
+                height: 260px;
+            }
+
+            .photo-deco-orb {
+                width: 220px;
+                height: 280px;
+            }
+
+            .photo-badge-orb {
+                font-size: 0.5rem;
+                padding: 0.3rem 0.6rem;
+                bottom: -12px;
+                right: -12px;
+            }
+
+            .orbit-item {
+                font-size: 0.55rem;
+                padding: 0.4rem 0.8rem;
+                letter-spacing: 1px;
+            }
+
+            section {
+                padding: 4rem 1.5rem;
+            }
+
+            .contact-wrap {
+                grid-template-columns: 1fr;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="bg3d"></canvas>
+    <div class="cursor"></div>
+    <div class="cursor-ring"></div>
+
+    <!-- NAVBAR hanya logo -->
+    <nav>
+        <div class="nav-logo">&lt;<span>SJ</span> /&gt;</div>
+    </nav>
+
+    <section id="hero">
+        <div class="hero-left">
+            <p class="hero-tag">Halo, perkenalkan saya</p>
+            <h1 class="hero-name">Saeful<br /><span class="line2">Jamil.</span></h1>
+            <p class="hero-sub"><span id="typing"></span><span
+                    style="color:var(--accent);animation:blink 1s infinite;display:inline-block;">_</span><br /><br />Mahasiswa
+                Sistem Informasi yang passionate dalam web development. Membangun antarmuka digital yang fungsional dan
+                estetis — satu baris kode dalam satu waktu.</p>
+            <div class="hero-btns"><a href="#projects" class="btn btn-primary">Lihat Proyek</a><a href="#contact"
+                    class="btn btn-outline">Hubungi Saya</a></div>
+        </div>
+
+        <!-- ORBITAL MENU AROUND PHOTO -->
+        <div class="orbital-container">
+            <div class="orbit-wrapper">
+                <div class="photo-core">
+                    <img src="https://i.ibb.co.com/gLb4ZG9G/Whats-App-Image-2026-06-02-at-02-05-08-1.jpg" alt="Saeful Jamil"
+                        onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'%3E%3Ccircle cx=\'100\' cy=\'100\' r=\'100\' fill=\'%2300e5ff\'/%3E%3Ccircle cx=\'100\' cy=\'80\' r=\'30\' fill=\'%23050810\'/%3E%3Ccircle cx=\'75\' cy=\'75\' r=\'5\' fill=\'%2300e5ff\'/%3E%3Ccircle cx=\'125\' cy=\'75\' r=\'5\' fill=\'%2300e5ff\'/%3E%3Cpath d=\'M70 110 Q100 140 130 110\' stroke=\'%23050810\' stroke-width=\'5\' fill=\'none\' stroke-linecap=\'round\'/%3E%3Ctext x=\'100\' y=\'170\' text-anchor=\'middle\' fill=\'%23050810\' font-size=\'16\' font-family=\'monospace\' font-weight=\'bold\'%3ESJ%3C/text%3E%3C/svg%3E'">
+                </div>
+                <div class="photo-deco-orb"></div>
+                <div class="photo-badge-orb">
+                    <span class="badge-dot"></span>AVAILABLE FOR WORK
+                </div>
+                <div id="orbit-menu" class="orbit-menu"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills">
+        <p class="section-label reveal">// Skills</p>
+        <h2 class="section-title reveal">Tech <span>Stack</span></h2>
+        <div class="skills-grid">
+            <div class="skill-card reveal"><span class="skill-icon">🌐</span>
+                <div class="skill-name">HTML5</div>
+                <div class="skill-desc">Membuat struktur website yang semantik dan aksesibel</div>
+                <div class="skill-bar">
+                    <div class="skill-fill" data-width="85%"></div>
+                </div>
+            </div>
+            <div class="skill-card reveal"><span class="skill-icon">🎨</span>
+                <div class="skill-name">CSS3</div>
+                <div class="skill-desc">Desain dan tampilan website yang responsif & modern</div>
+                <div class="skill-bar">
+                    <div class="skill-fill" data-width="80%"></div>
+                </div>
+            </div>
+            <div class="skill-card reveal"><span class="skill-icon">⚡</span>
+                <div class="skill-name">JavaScript</div>
+                <div class="skill-desc">Menambahkan interaktivitas dan logika pada website</div>
+                <div class="skill-bar">
+                    <div class="skill-fill" data-width="70%"></div>
+                </div>
+            </div>
+            <div class="skill-card reveal"><span class="skill-icon">🔧</span>
+                <div class="skill-name">PHP</div>
+                <div class="skill-desc">Backend dasar: server-side logic dan database</div>
+                <div class="skill-bar">
+                    <div class="skill-fill" data-width="65%"></div>
+                </div>
+            </div>
+            <div class="skill-card reveal"><span class="skill-icon">🐙</span>
+                <div class="skill-name">Git & GitHub</div>
+                <div class="skill-desc">Version control dan kolaborasi proyek tim</div>
+                <div class="skill-bar">
+                    <div class="skill-fill" data-width="72%"></div>
+                </div>
+            </div>
+            <div class="skill-card reveal"><span class="skill-icon">🌐</span>
+                <div class="skill-name">Jaringan Komputer</div>
+                <div class="skill-desc">Pemahaman dasar arsitektur dan protokol jaringan</div>
+                <div class="skill-bar">
+                    <div class="skill-fill" data-width="60%"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <p class="section-label reveal">// Projects</p>
+        <h2 class="section-title reveal">Yang Pernah <span>Saya Buat</span></h2>
+        <div class="projects-grid">
+            <div class="project-card reveal">
+                <div class="project-num">PROJECT_01</div>
+                <div class="project-title">Website Portofolio Pribadi</div>
+                <div class="project-desc">Membuat website portofolio menggunakan HTML, CSS, dan JavaScript. Menampilkan
+                    data diri, skill, dan proyek secara interaktif dan responsif.</div>
+                <div class="project-tags"><span class="tag">HTML</span><span class="tag">CSS</span><span
+                        class="tag">JavaScript</span></div>
+            </div>
+            <div class="project-card reveal">
+                <div class="project-num">PROJECT_02</div>
+                <div class="project-title">Sistem Login Sederhana (PHP)</div>
+                <div class="project-desc">Membuat sistem autentikasi menggunakan PHP dan MySQL. Fitur: Login, Logout,
+                    Validasi User dengan session management yang aman.</div>
+                <div class="project-tags"><span class="tag">PHP</span><span class="tag">MySQL</span><span
+                        class="tag">HTML</span><span class="tag">CSS</span></div>
+            </div>
+            <div class="project-card reveal">
+                <div class="project-num">PROJECT_03</div>
+                <div class="project-title">Desain UI Aplikasi (Figma)</div>
+                <div class="project-desc">Mendesain tampilan aplikasi sederhana dengan fokus pada estetika minimalis dan
+                    pengalaman pengguna yang intuitif dan user-friendly.</div>
+                <div class="project-tags"><span class="tag">Figma</span><span class="tag">UI/UX</span><span
+                        class="tag">Prototyping</span></div>
+            </div>
+            <div class="project-card reveal" id="kasir-project-btn">
+                <div class="project-num">PROJECT_04 ⭐</div>
+                <div class="project-title">Aplikasi Kasir Saeja Mart</div>
+                <div class="project-desc">Aplikasi kasir modern dengan fitur manajemen produk, keranjang belanja, metode
+                    pembayaran (Tunai/QRIS/Debit), perhitungan kembalian otomatis, dan cetak struk.</div>
+                <div class="project-tags"><span class="tag">HTML</span><span class="tag">Tailwind CSS</span><span
+                        class="tag">JavaScript</span></div>
+                <div class="demo-link" id="open-kasir-btn">🔗 Buka Demo Kasir →</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="education">
+        <p class="section-label reveal">// Education</p>
+        <h2 class="section-title reveal">Latar <span>Belakang</span></h2>
+        <div class="edu-card reveal">
+            <div class="edu-year">2025 — SEKARANG</div>
+            <div class="edu-title">Sistem Informasi</div>
+            <div class="edu-sub">Universitas / Perguruan Tinggi &nbsp;·&nbsp; Sedang Ditempuh</div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <p class="section-label reveal">// Contact</p>
+        <h2 class="section-title reveal">Mari <span>Terhubung</span></h2>
+        <div class="contact-wrap">
+            <div class="contact-info reveal">
+                <p>Saya terbuka untuk peluang kolaborasi,<br />freelance, dan project bersama.<br />Jangan ragu untuk
+                    menghubungi saya!</p>
+                <div class="contact-links">
+                    <a href="#" class="contact-link"><span class="icon">🐙</span> GitHub: github.com/saeja</a>
+                    <a href="#" class="contact-link"><span class="icon">💼</span> LinkedIn: Saeja</a>
+                    <a href="#" class="contact-link"><span class="icon">📧</span> saeja115@email.com</a>
+                    <a href="#" class="contact-link"><span class="icon">🌐</span> Portfolio: saefuljamil.dev</a>
+                </div>
+            </div>
+            <div class="reveal">
+                <p class="section-label" style="margin-bottom:1.2rem;">Kelebihan Saya</p>
+                <div class="strengths-list">
+                    <div class="strength-item"><span>Cepat belajar hal baru</span></div>
+                    <div class="strength-item"><span>Disiplin dan bertanggung jawab</span></div>
+                    <div class="strength-item"><span>Mampu bekerja dalam tim maupun mandiri</span></div>
+                    <div class="strength-item"><span>Berorientasi pada solusi</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <span style="color:var(--text-dim)">© 2025 <span>Saeful Jamil</span>. Dibuat dengan ❤️ & ☕</span>
+        <span style="color:var(--text-dim)">Sistem Informasi &nbsp;·&nbsp; <span>Web Developer</span></span>
+    </footer>
+
+    <!-- Modal untuk Aplikasi Kasir -->
+    <div id="kasir-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" id="close-modal-btn">✕</button>
+            <div id="kasir-app-container"></div>
+        </div>
+    </div>
+
+    <script>
+        // Konten HTML Aplikasi Kasir (LENGKAP seperti asli)
+        const kasirAppHTML = `
+      <div id="kasir-root" class="dark">
+        <style>
+          .hover-lift { transition: all 0.2s ease; }
+          .hover-lift:hover { transform: translateY(-3px); }
+          .list-item-animate { animation: slideIn 0.2s ease-out; }
+          @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+          .no-scrollbar::-webkit-scrollbar { display: none; }
+          .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+          #kasir-root .bg-gray-100 { background-color: #f3f4f6; }
+          #kasir-root .dark .bg-gray-950 { background-color: #030712; }
+          #kasir-root .dark .bg-gray-900 { background-color: #111827; }
+          #kasir-root .dark .text-white { color: #ffffff; }
+          #kasir-root .dark .text-gray-400 { color: #9ca3af; }
+          #kasir-root .dark .border-gray-800 { border-color: #1f2937; }
+          #kasir-root .dark .bg-gray-800 { background-color: #1f2937; }
+          #kasir-root .dark .bg-gray-800\\/70 { background-color: rgba(31, 41, 55, 0.7); }
+        </style>
+        <div class="bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-white min-h-screen p-4 md:p-6 transition-colors duration-300 flex items-center justify-center">
+          <main class="w-full max-w-6xl mx-auto bg-white dark:bg-gray-900 p-6 md:p-8 rounded-3xl border border-gray-200/80 dark:border-gray-800 shadow-2xl transition-colors duration-300">
+            <div class="flex justify-between items-center mb-4">
+              <div>
+                <h1 class="text-3xl font-black tracking-wider bg-gradient-to-r from-blue-600 to-indigo-500 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">SAEJA MART</h1>
+                <div id="jam-digital-kasir" class="text-gray-400 dark:text-gray-500 font-mono text-xs mt-1"></div>
+              </div>
+              <button onclick="toggleKasirMode()" class="p-3 rounded-2xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all shadow-sm">
+                <span id="kasir-mode-icon" class="text-xl">🌙</span>
+              </button>
+            </div>
+            <marquee class="text-blue-600 dark:text-blue-400 text-xs font-medium bg-blue-50 dark:bg-blue-950/40 px-4 py-2 rounded-xl mb-6 border border-blue-100 dark:border-blue-900/30">
+              Selamat datang di Toko Saeja Mart, semoga Anda bisa berbelanja dengan baik dan sehat selalu!
+            </marquee>
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+              <div class="md:col-span-7 lg:col-span-8">
+                <div class="relative mb-6">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-gray-400">🔍</span>
+                  <input type="text" id="search-kasir" onkeyup="renderProdukKasir()" placeholder="Cari nama barang atau kode ID..." class="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 pl-11 pr-4 py-4 rounded-2xl outline-none focus:border-blue-500 dark:focus:border-blue-500 font-medium transition-all shadow-inner">
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 max-h-[600px] overflow-y-auto no-scrollbar pr-1" id="product-list-kasir"></div>
+              </div>
+              <div class="md:col-span-5 lg:col-span-4 bg-gray-50 dark:bg-gray-950/50 p-6 rounded-3xl border border-gray-200 dark:border-gray-800 transition-colors shadow-sm sticky top-6">
+                <div class="flex items-center justify-between mb-4">
+                  <h2 class="font-bold text-lg flex items-center gap-2">🛒 Keranjang Belanja</h2>
+                  <span id="badge-item-kasir" class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-xs px-2.5 py-1 rounded-full font-bold">0 Item</span>
+                </div>
+                <div class="max-h-[240px] overflow-y-auto no-scrollbar mb-4 border-b border-gray-100 dark:border-gray-800/60 pb-2">
+                  <ul id="keranjang-list-kasir" class="space-y-2.5 min-h-[60px]"></ul>
+                </div>
+                <div class="flex justify-between items-baseline border-t border-gray-200 dark:border-gray-800 pt-4 mb-4">
+                  <span class="text-sm font-medium text-gray-400">Total Tagihan:</span>
+                  <div class="text-3xl font-black tracking-tight text-right text-blue-600 dark:text-blue-400">Rp <span id="total-harga-kasir">0</span></div>
+                </div>
+                <div class="space-y-3 mt-4">
+                  <div>
+                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Metode Bayar</label>
+                    <select id="metode-bayar-kasir" class="w-full bg-white dark:bg-gray-800 p-3.5 rounded-xl border border-gray-200 dark:border-gray-700 font-medium focus:outline-none focus:border-blue-500 cursor-pointer shadow-sm">
+                      <option>Tunai</option>
+                      <option>QRIS</option>
+                      <option>Debit BCA</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Uang Diterima (Rp)</label>
+                    <input type="number" id="uang-diterima-kasir" oninput="hitungKembalianKasir()" placeholder="Masukkan nominal..." class="w-full bg-white dark:bg-gray-800 p-3.5 rounded-xl border border-gray-200 dark:border-gray-700 font-bold text-lg focus:outline-none focus:border-blue-500 shadow-sm">
+                  </div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 mt-3">
+                  <button onclick="setUangInstanKasir('pas')" class="text-xs bg-gray-200 dark:bg-gray-800 hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600 p-2 rounded-lg font-semibold transition">Uang Pas</button>
+                  <button onclick="setUangInstanKasir(50000)" class="text-xs bg-gray-200 dark:bg-gray-800 hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600 p-2 rounded-lg font-semibold transition">50.000</button>
+                  <button onclick="setUangInstanKasir(100000)" class="text-xs bg-gray-200 dark:bg-gray-800 hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600 p-2 rounded-lg font-semibold transition">100.000</button>
+                </div>
+                <div class="mt-4 p-4 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/20 rounded-xl text-emerald-600 dark:text-emerald-400 flex justify-between items-center shadow-sm">
+                  <span class="text-xs font-bold uppercase tracking-wider opacity-80">Kembalian</span>
+                  <div class="text-xl font-black">Rp <span id="kembalian-kasir">0</span></div>
+                </div>
+                <button onclick="window.print()" class="w-full mt-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl font-bold tracking-wide shadow-lg shadow-blue-600/20 hover:opacity-95 active:scale-[0.99] transition transform">Cetak Struk (Print)</button>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    `;
+
+        // Variabel untuk kasir
+        let produkKasir = [
+            { id: 'B01', nama: 'Beras Premium 5kg', harga: 65000, stok: 45 },
+            { id: 'M01', nama: 'Minyak Goreng 2L', harga: 34000, stok: 30 },
+            { id: 'G01', nama: 'Gula Pasir 1kg', harga: 16000, stok: 50 },
+            { id: 'I01', nama: 'Indomie Goreng', harga: 3000, stok: 120 },
+            { id: 'T01', nama: 'Telur Ayam 1kg', harga: 28000, stok: 25 },
+            { id: 'S01', nama: 'Susu UHT Full Cream 1L', harga: 18500, stok: 40 },
+            { id: 'K01', nama: 'Kopi Bubuk 200g', harga: 12000, stok: 35 },
+            { id: 'A01', nama: 'Air Mineral 600ml', harga: 3500, stok: 200 },
+            { id: 'C01', nama: 'Camilan Keripik Kentang', harga: 9500, stok: 60 },
+            { id: 'D01', nama: 'Sabun Mandi Cair 450ml', harga: 22000, stok: 28 },
+            { id: 'D02', nama: 'Shampoo Botol 170ml', harga: 24500, stok: 20 },
+            { id: 'P01', nama: 'Pasta Gigi 190g', harga: 14000, stok: 38 }
+        ];
+        let totalKasir = 0;
+        let keranjangDataKasir = {};
+        let kasirDarkMode = true;
+
+        function toggleKasirMode() {
+            const root = document.getElementById('kasir-root');
+            const icon = document.getElementById('kasir-mode-icon');
+            kasirDarkMode = !kasirDarkMode;
+            if (kasirDarkMode) {
+                root.classList.add('dark');
+                icon.innerText = '🌙';
+            } else {
+                root.classList.remove('dark');
+                icon.innerText = '☀️';
+            }
+        }
+
+        function renderProdukKasir() {
+            const query = document.getElementById('search-kasir')?.value.toLowerCase() || '';
+            const list = document.getElementById('product-list-kasir');
+            if (!list) return;
+            const filtered = produkKasir.filter(p => p.nama.toLowerCase().includes(query) || p.id.toLowerCase().includes(query));
+            list.innerHTML = filtered.map(p => `
+        <button onclick="tambahKasir('${p.id}')" ${p.stok === 0 ? 'disabled' : ''} class="hover-lift flex flex-col justify-between h-32 bg-white dark:bg-gray-800/70 border border-gray-100 dark:border-gray-800 p-4 rounded-2xl transition shadow-sm text-left w-full ${p.stok === 0 ? 'opacity-30 cursor-not-allowed' : 'hover:border-blue-500 dark:hover:border-blue-400 group'}">
+          <div class="w-full">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400">${p.id}</span>
+              <span class="text-[10px] text-gray-400 font-medium">Stok: ${p.stok}</span>
+            </div>
+            <div class="font-bold text-sm text-gray-700 dark:text-gray-200 truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">${p.nama}</div>
+          </div>
+          <div class="font-extrabold text-base text-gray-900 dark:text-white mt-2">Rp ${p.harga.toLocaleString('id-ID')}</div>
+        </button>
+      `).join('');
+        }
+
+        function tambahKasir(id) {
+            let p = produkKasir.find(x => x.id === id);
+            if (p && p.stok > 0) {
+                p.stok--;
+                totalKasir += p.harga;
+                if (keranjangDataKasir[id]) {
+                    keranjangDataKasir[id].qty++;
+                } else {
+                    keranjangDataKasir[id] = { nama: p.nama, harga: p.harga, qty: 1 };
+                }
+                updateKeranjangUIKasir();
+                renderProdukKasir();
+            }
+        }
+
+        function updateKeranjangUIKasir() {
+            const list = document.getElementById('keranjang-list-kasir');
+            if (!list) return;
+            list.innerHTML = '';
+            let totalItem = 0;
+            const keys = Object.keys(keranjangDataKasir);
+            if (keys.length === 0) {
+                list.innerHTML = `<div class="text-center py-6 text-xs text-gray-400 dark:text-gray-500 italic">Belum ada barang dipilih</div>`;
+            } else {
+                keys.forEach(id => {
+                    const item = keranjangDataKasir[id];
+                    totalItem += item.qty;
+                    const li = document.createElement('li');
+                    li.className = "list-item-animate flex justify-between items-center bg-white dark:bg-gray-800 p-3 rounded-xl border border-gray-100 dark:border-gray-700/60 shadow-sm text-xs";
+                    li.innerHTML = `
+            <div class="flex flex-col max-w-[65%]">
+              <span class="font-bold text-gray-800 dark:text-gray-200 truncate">${item.nama}</span>
+              <span class="text-[10px] text-gray-400 font-medium">@Rp ${item.harga.toLocaleString('id-ID')} x ${item.qty}</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="font-extrabold text-gray-900 dark:text-white">Rp ${(item.harga * item.qty).toLocaleString('id-ID')}</span>
+              <button onclick="kurangiDariKeranjangKasir('${id}')" class="text-gray-400 hover:text-rose-500 font-bold px-1 text-sm transition">×</button>
+            </div>
+          `;
+                    list.appendChild(li);
+                });
+            }
+            const totalEl = document.getElementById('total-harga-kasir');
+            const badgeEl = document.getElementById('badge-item-kasir');
+            if (totalEl) totalEl.innerText = totalKasir.toLocaleString('id-ID');
+            if (badgeEl) badgeEl.innerText = `${totalItem} Item`;
+            hitungKembalianKasir();
+        }
+
+        function kurangiDariKeranjangKasir(id) {
+            let p = produkKasir.find(x => x.id === id);
+            if (keranjangDataKasir[id]) {
+                p.stok++;
+                totalKasir -= p.harga;
+                keranjangDataKasir[id].qty--;
+                if (keranjangDataKasir[id].qty === 0) {
+                    delete keranjangDataKasir[id];
+                }
+                updateKeranjangUIKasir();
+                renderProdukKasir();
+            }
+        }
+
+        function setUangInstanKasir(tipe) {
+            const inputUang = document.getElementById('uang-diterima-kasir');
+            if (inputUang) {
+                if (tipe === 'pas') {
+                    inputUang.value = totalKasir;
+                } else {
+                    inputUang.value = tipe;
+                }
+                hitungKembalianKasir();
+            }
+        }
+
+        function hitungKembalianKasir() {
+            const bayar = parseInt(document.getElementById('uang-diterima-kasir')?.value) || 0;
+            const kembalian = bayar - totalKasir;
+            const kembalianEl = document.getElementById('kembalian-kasir');
+            if (kembalianEl) kembalianEl.innerText = (kembalian > 0 ? kembalian : 0).toLocaleString('id-ID');
+        }
+
+        let kasirInterval;
+        function startKasirClock() {
+            if (kasirInterval) clearInterval(kasirInterval);
+            kasirInterval = setInterval(() => {
+                const opsi = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const hariIni = new Date().toLocaleDateString('id-ID', opsi);
+                const waktuIni = new Date().toLocaleTimeString('id-ID');
+                const jamEl = document.getElementById('jam-digital-kasir');
+                if (jamEl) jamEl.innerText = `${hariIni} — ${waktuIni}`;
+            }, 1000);
+        }
+
+        // Modal handlers
+        const modal = document.getElementById('kasir-modal');
+        const openButtons = [document.getElementById('kasir-project-btn'), document.getElementById('open-kasir-btn')];
+        const closeBtn = document.getElementById('close-modal-btn');
+
+        function openKasirModal() {
+            const container = document.getElementById('kasir-app-container');
+            if (container) {
+                container.innerHTML = kasirAppHTML;
+                // Reset data kasir
+                produkKasir = [
+                    { id: 'B01', nama: 'Beras Premium 5kg', harga: 65000, stok: 45 },
+                    { id: 'M01', nama: 'Minyak Goreng 2L', harga: 34000, stok: 30 },
+                    { id: 'G01', nama: 'Gula Pasir 1kg', harga: 16000, stok: 50 },
+                    { id: 'I01', nama: 'Indomie Goreng', harga: 3000, stok: 120 },
+                    { id: 'T01', nama: 'Telur Ayam 1kg', harga: 28000, stok: 25 },
+                    { id: 'S01', nama: 'Susu UHT Full Cream 1L', harga: 18500, stok: 40 },
+                    { id: 'K01', nama: 'Kopi Bubuk 200g', harga: 12000, stok: 35 },
+                    { id: 'A01', nama: 'Air Mineral 600ml', harga: 3500, stok: 200 },
+                    { id: 'C01', nama: 'Camilan Keripik Kentang', harga: 9500, stok: 60 },
+                    { id: 'D01', nama: 'Sabun Mandi Cair 450ml', harga: 22000, stok: 28 },
+                    { id: 'D02', nama: 'Shampoo Botol 170ml', harga: 24500, stok: 20 },
+                    { id: 'P01', nama: 'Pasta Gigi 190g', harga: 14000, stok: 38 }
+                ];
+                totalKasir = 0;
+                keranjangDataKasir = {};
+                kasirDarkMode = true;
+                renderProdukKasir();
+                updateKeranjangUIKasir();
+                startKasirClock();
+            }
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeKasirModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            if (kasirInterval) clearInterval(kasirInterval);
+        }
+
+        openButtons.forEach(btn => {
+            if (btn) btn.addEventListener('click', openKasirModal);
+        });
+        if (closeBtn) closeBtn.addEventListener('click', closeKasirModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeKasirModal();
+        });
+
+        // Expose functions to global scope for kasir buttons
+        window.tambahKasir = tambahKasir;
+        window.kurangiDariKeranjangKasir = kurangiDariKeranjangKasir;
+        window.setUangInstanKasir = setUangInstanKasir;
+        window.hitungKembalianKasir = hitungKembalianKasir;
+        window.renderProdukKasir = renderProdukKasir;
+        window.updateKeranjangUIKasir = updateKeranjangUIKasir;
+        window.toggleKasirMode = toggleKasirMode;
+
+        // ============= ORBITAL MENU =============
+        const menuItems = [
+            { name: 'HOME', link: '#hero' },
+            { name: 'SKILLS', link: '#skills' },
+            { name: 'PROJECTS', link: '#projects' },
+            { name: 'EDUCATION', link: '#education' },
+            { name: 'CONTACT', link: '#contact' }
+        ];
+
+        const orbitContainer = document.getElementById('orbit-menu');
+        const radiusX = 185;  // radius horizontal
+        const radiusY = 80;   // radius vertical
+        const totalItems = menuItems.length;
+        let orbitAngle = 0;
+        let orbitSpeed = 0.008;
+
+        function createOrbitItems() {
+            orbitContainer.innerHTML = '';
+            menuItems.forEach((item, idx) => {
+                const btn = document.createElement('a');
+                btn.className = 'orbit-item';
+                btn.href = item.link;
+                btn.textContent = item.name;
+                btn.style.left = '50%';
+                btn.style.top = '50%';
+                orbitContainer.appendChild(btn);
+            });
+        }
+
+        function updateOrbitPositions(angleRad) {
+            const items = document.querySelectorAll('.orbit-item');
+            items.forEach((item, i) => {
+                const offsetAngle = angleRad + (i * (Math.PI * 2 / totalItems));
+                const x = Math.cos(offsetAngle) * radiusX;
+                const y = Math.sin(offsetAngle) * radiusY;
+                const scale = 0.85 + (Math.cos(offsetAngle) * 0.2);
+                const opacity = 0.8 + (Math.sin(offsetAngle) * 0.25);
+                item.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(${scale})`;
+                item.style.opacity = opacity;
+                item.style.zIndex = Math.floor(15 + (Math.sin(offsetAngle) * 10));
+            });
+        }
+
+        function animateOrbit() {
+            orbitAngle += orbitSpeed;
+            updateOrbitPositions(orbitAngle);
+            requestAnimationFrame(animateOrbit);
+        }
+
+        function initOrbit() {
+            createOrbitItems();
+            updateOrbitPositions(0);
+            animateOrbit();
+
+            // Hover effect on container to speed up rotation
+            const container = document.querySelector('.orbital-container');
+            if (container) {
+                container.addEventListener('mouseenter', () => { orbitSpeed = 0.022; });
+                container.addEventListener('mouseleave', () => { orbitSpeed = 0.008; });
+            }
+
+            // Smooth scroll on click
+            document.querySelectorAll('.orbit-item').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href');
+                    if (targetId && targetId !== '#') {
+                        const targetElem = document.querySelector(targetId);
+                        if (targetElem) {
+                            targetElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }
+                });
+            });
+        }
+
+        initOrbit();
+
+        // THREE.JS 3D ANIMATED BACKGROUND
+        (function () {
+            const canvas = document.getElementById('bg3d');
+            const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x050810, 1);
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 60;
+            scene.fog = new THREE.FogExp2(0x050810, 0.018);
+            const particleCount = 1800;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+            for (let i = 0; i < particleCount; i++) {
+                const i3 = i * 3;
+                positions[i3] = (Math.random() - 0.5) * 200;
+                positions[i3 + 1] = (Math.random() - 0.5) * 200;
+                positions[i3 + 2] = (Math.random() - 0.5) * 120;
+                const r = Math.random();
+                if (r < 0.55) { colors[i3] = 0; colors[i3 + 1] = 0.9; colors[i3 + 2] = 1; }
+                else if (r < 0.8) { colors[i3] = 0.22; colors[i3 + 1] = 1; colors[i3 + 2] = 0.08; }
+                else { colors[i3] = 1; colors[i3 + 1] = 1; colors[i3 + 2] = 1; }
+            }
+            const pGeo = new THREE.BufferGeometry();
+            pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            pGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            const pMat = new THREE.PointsMaterial({ size: 0.35, vertexColors: true, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending, depthWrite: false });
+            const particles = new THREE.Points(pGeo, pMat);
+            scene.add(particles);
+
+            const shapes = [];
+            const shapeColors = [0x00e5ff, 0x39ff14, 0x00aaff, 0x00ffcc];
+            for (let i = 0; i < 12; i++) {
+                const geo = Math.random() < 0.5 ? new THREE.OctahedronGeometry(Math.random() * 3 + 1.5, 0) : new THREE.IcosahedronGeometry(Math.random() * 2.5 + 1, 0);
+                const mat = new THREE.MeshBasicMaterial({ color: shapeColors[i % shapeColors.length], wireframe: true, transparent: true, opacity: Math.random() * 0.18 + 0.07 });
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.position.set((Math.random() - 0.5) * 120, (Math.random() - 0.5) * 80, (Math.random() - 0.5) * 60 - 10);
+                mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
+                mesh.userData = { rX: (Math.random() - 0.5) * 0.008, rY: (Math.random() - 0.5) * 0.008, floatSpeed: Math.random() * 0.003 + 0.001, floatAmp: Math.random() * 4 + 2, originY: mesh.position.y, phase: Math.random() * Math.PI * 2 };
+                scene.add(mesh);
+                shapes.push(mesh);
+            }
+
+            const gridHelper = new THREE.GridHelper(200, 40, 0x00e5ff, 0x001520);
+            gridHelper.material.transparent = true;
+            gridHelper.material.opacity = 0.12;
+            gridHelper.position.y = -30;
+            scene.add(gridHelper);
+
+            let mouseX = 0, mouseY = 0;
+            document.addEventListener('mousemove', e => { mouseX = (e.clientX / window.innerWidth - 0.5) * 2; mouseY = (e.clientY / window.innerHeight - 0.5) * 2; });
+            window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
+            let t = 0;
+            function animate() {
+                requestAnimationFrame(animate);
+                t += 0.008;
+                particles.rotation.y += 0.00025;
+                particles.rotation.x += 0.00010;
+                camera.position.x += (mouseX * 6 - camera.position.x) * 0.025;
+                camera.position.y += (-mouseY * 4 - camera.position.y) * 0.025;
+                camera.lookAt(scene.position);
+                gridHelper.position.z = (t * 3) % 5;
+                shapes.forEach(s => { s.rotation.x += s.userData.rX; s.rotation.y += s.userData.rY; s.position.y = s.userData.originY + Math.sin(t * s.userData.floatSpeed * 200 + s.userData.phase) * s.userData.floatAmp; });
+                renderer.render(scene, camera);
+            }
+            animate();
+        })();
+
+        // Cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorRing = document.querySelector('.cursor-ring');
+        document.addEventListener('mousemove', e => { cursor.style.transform = `translate(${e.clientX - 5}px, ${e.clientY - 5}px)`; cursorRing.style.transform = `translate(${e.clientX - 17}px, ${e.clientY - 17}px)`; });
+        document.querySelectorAll('a, button, .skill-card, .project-card').forEach(el => { el.addEventListener('mouseenter', () => { cursorRing.style.opacity = '0.9'; cursorRing.style.transform += ' scale(1.5)'; }); el.addEventListener('mouseleave', () => { cursorRing.style.opacity = '0.45'; }); });
+
+        // Reveal animations
+        const revealEls = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver(entries => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); const fill = entry.target.querySelector('.skill-fill'); if (fill) setTimeout(() => { fill.style.width = fill.dataset.width; }, 200); } }); }, { threshold: 0.1 });
+        revealEls.forEach(el => observer.observe(el));
+
+        // Typing effect
+        const taglines = ['Web Developer', 'Sistem Informasi', 'UI Enthusiast', 'Problem Solver'];
+        let i = 0, j = 0, deleting = false;
+        const typingEl = document.getElementById('typing');
+        function type() { const word = taglines[i]; typingEl.textContent = word.slice(0, j); if (!deleting) { j++; if (j > word.length) { deleting = true; setTimeout(type, 1600); return; } } else { j--; if (j < 0) { deleting = false; i = (i + 1) % taglines.length; j = 0; } } setTimeout(type, deleting ? 55 : 95); }
+        type();
+
+        // Active nav highlight based on scroll (untuk menu yang sudah diorbit tetap bisa)
+        const sections = document.querySelectorAll('section[id]');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(s => { if (window.scrollY >= s.offsetTop - 130) current = s.id; });
+            document.querySelectorAll('.orbit-item').forEach(a => {
+                a.style.borderColor = a.getAttribute('href') === `#${current}` ? 'var(--green)' : 'var(--accent)';
+                if (a.getAttribute('href') === `#${current}`) {
+                    a.style.boxShadow = '0 0 20px var(--green)';
+                } else {
+                    a.style.boxShadow = '0 0 8px rgba(0,229,255,0.3)';
+                }
+            });
+        });
+
+        // Particle effect on project click
+        function spawnParticles(x, y) { const colors = ['#00e5ff', '#39ff14', '#ffffff', '#7fdbff']; for (let i = 0; i < 14; i++) { const p = document.createElement('div'); p.style.cssText = `position:fixed; pointer-events:none; z-index:9999; width:${Math.random() * 6 + 3}px; height:${Math.random() * 6 + 3}px; border-radius:50%; background:${colors[i % colors.length]}; left:${x}px; top:${y}px; transition: transform ${0.4 + Math.random() * 0.4}s ease-out, opacity 0.5s ease-out; transform: translate(0,0) scale(1); opacity:1; box-shadow: 0 0 6px currentColor;`; document.body.appendChild(p); const angle = (i / 14) * Math.PI * 2 + Math.random() * 0.5; const dist = 40 + Math.random() * 80; const tx = Math.cos(angle) * dist; const ty = Math.sin(angle) * dist; requestAnimationFrame(() => { p.style.transform = `translate(${tx}px, ${ty}px) scale(0)`; p.style.opacity = '0'; }); setTimeout(() => p.remove(), 900); } }
+        document.querySelectorAll('.project-card:not(#kasir-project-btn)').forEach(card => { card.addEventListener('click', e => spawnParticles(e.clientX, e.clientY)); });
+
+        // Ripple effect on buttons
+        document.querySelectorAll('.btn').forEach(btn => { btn.addEventListener('click', e => { const r = btn.getBoundingClientRect(); const rip = document.createElement('span'); const size = Math.max(r.width, r.height) * 2; rip.style.cssText = `position:absolute; pointer-events:none; width:${size}px; height:${size}px; border-radius:50%; background:rgba(255,255,255,0.25); left:${e.clientX - r.left - size / 2}px; top:${e.clientY - r.top - size / 2}px; transform:scale(0); animation:rippleAnim 0.6s ease-out forwards;`; if (!document.getElementById('ripple-style')) { const s = document.createElement('style'); s.id = 'ripple-style'; s.textContent = `@keyframes rippleAnim { to { transform:scale(1); opacity:0; } }`; document.head.appendChild(s); } btn.style.position = 'relative'; btn.style.overflow = 'hidden'; btn.appendChild(rip); setTimeout(() => rip.remove(), 650); }); });
+
+        // Scan line effect
+        const scanStyle = document.createElement('style');
+        scanStyle.textContent = `.scan-sweep { position: relative; overflow: hidden; } .scan-sweep::before { content: ''; position: absolute; top: -100%; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.5; animation: scanLine 4s linear infinite; pointer-events: none; z-index: 2; } @keyframes scanLine { 0% { top: -2px; opacity: 0.6; } 100% { top: 100%; opacity: 0; } }`;
+        document.head.appendChild(scanStyle);
+        document.querySelectorAll('section').forEach(s => s.classList.add('scan-sweep'));
+    </script>
+</body>
+
+</html>
